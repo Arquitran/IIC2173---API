@@ -1,4 +1,5 @@
 const Authentication = require('./controllers/authentication');
+const Transactions = require('./controllers/transactions');
 const CartController = require('./controllers/cart');
 const passportService = require('./services/passport');
 const passport = require('passport');
@@ -12,6 +13,7 @@ module.exports = function(app) {
   });
   app.post('/api/signin', requireSignIn, Authentication.signin);
   app.post('/api/signup', Authentication.signup);
+  app.post('/api/transactions', requireAuth, Transactions.buyProduct);
 
   app.post('/api/cart', CartController.processCart);
 }
