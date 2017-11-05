@@ -15,5 +15,5 @@ module.exports = function(app) {
   app.post('/api/signup', Authentication.signup);
   app.post('/api/transactions', requireAuth, Transactions.buyProduct);
 
-  app.post('/api/cart', CartController.processCart);
+  app.post('/api/cart', requireAuth, CartController.processCart);
 }

@@ -8,7 +8,7 @@ function genToken(user) {
 }
 
 exports.signin = function(req, res, next) {
-  res.send({ token: genToken(req.user) })
+  res.send({ token: genToken(req.user), id: user.id })
 }
 
 exports.signup = function(req, res, next) {
@@ -38,7 +38,7 @@ exports.signup = function(req, res, next) {
         return next(err);
       }
 
-      res.json({ token: genToken(user) });
+      res.json({ token: genToken(user), id: user.id });
 
     });
 

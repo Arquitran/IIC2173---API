@@ -8,8 +8,11 @@ exports.buyProduct = function(req, res, next) {
   const userId = req.body.user_id;
   const productId = req.body.product;
   const amount = req.body.amount;
+  const id = req.user.id;
 
-  Transactions.count({ userId, prouductId })
+  console.log(id);
+
+  Transaction.count({ userId, productId })
     .where('createdAt')
     .gt(yesterday)
     .exec(function (err, count) {
@@ -20,6 +23,7 @@ exports.buyProduct = function(req, res, next) {
         return res.status(401).send({ error: 'Exceeds daily purchase limit'})
       } else {
         // TODO Executes purchase
+        return res.status(200).send({ succes: 'Bought'})
 
       }
     });
