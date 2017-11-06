@@ -1,11 +1,18 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt-nodejs');
+var autoIncrement = require('mongoose-auto-increment');
+var connection = mongoose.createConnection("mongodb://localhost/myDatabase");
 
-const userSchema = new Schema({
+autoIncrement.initialize(connection);
+
+var userSchema = new Schema({
   email: { type: String, unique: true, lowercase: true },
   password: String
 });
+
+userSchema.plugin(autoIncrement.plugin, 'User');
+var User = connection.model('User', userSchema)
 
 userSchema.pre('save', function(next) {
   const user = this;

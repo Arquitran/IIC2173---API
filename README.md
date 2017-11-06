@@ -23,3 +23,32 @@
 
 401 => Unauthorized
 ```
+
+**POST:  /api/cart/**
+```
+HEADERS
+Authorization: token
+
+BODY
+
+[
+	{
+		"product_id": "1",
+		"amount": "1"
+	},
+		{
+		"product_id": "2",
+		"amount": "10"
+	}
+]
+
+200 =>  {
+					"1":1,
+					"2":1,
+					(product_id: 1 bought, 0 rejected or error)
+				}
+
+
+
+401 => Unauthorized
+```
