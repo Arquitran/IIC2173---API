@@ -5,13 +5,14 @@ const GROUP = "G2";
 const TRANSACTIONS_URL = 'http://arqss16.ing.puc.cl/transactions/';
 
 var request=require('request-promise');
-var Promise = require('promise');
 
 exports.processCart = function(req, res, next) {
   var responses = [];
+  var requests = [];
+  var id = 0;
   var total = req.body.length;
-  var count = 0;
-  for(i in req.body) {
+  var count = -1;
+  for(i = 0; i < req.body.length; i++) {
     console.log("se" + req.body[i].product_id);
     //responses[req.body[i].product_id] = Transactions.buyProduct(req.body[i].product_id,req.body[i].amount, req.user._id);
     var jsonRequest = {
@@ -29,24 +30,31 @@ exports.processCart = function(req, res, next) {
          },
          json: jsonRequest
     };
-    request(optionsRequest)
+    requests.push(request(optionsRequest)
     .then (function(resp){
-      responses.push({key: optionsRequest.json['product'], value: resp});
       count++;
+      return({key: count, value: resp});
       console.log(resp + count + total );
-      if (total == count ) {
-        res.send({transactions: responses});
-      }
     })
     .catch(function(err){
       console.log(err);
-      responses.push({key: optionsRequest.json['product'], value: err});
-      count++;
-      if (total == count ) {
-        res.send({transactions: responses});
-      }
-    })
+      return({key:count, value: err});
+    }));
 
   }
 
-}
+
+
+  Promise.all(requests).then((values) =>{
+    var results = {};
+    for (i = 0; i < values.length; i++) {
+      if (values[i]["value"]["status"]["transaction_status_code"]=="EXEC"){
+        results[req.body[values[i]["key"]].product_id] = 1;
+      } else {
+        results[req.body[values[i]["key"]].product_id] = 0;
+      }
+    }
+    res.send(results);
+  })
+
+};
