@@ -1,7 +1,6 @@
 const Transaction = require('../models/transaction');
 const config = require('../config');
-var request=require('request');
-var async_request = require('async');
+var request=require('request-promise');
 
 const MAX_PURCHASES_PER_DAY = 3;
 const APPLICATION_TOKEN = "6d876925-a71d-4379-93aa-6144138dc8fc";
@@ -41,16 +40,16 @@ exports.buyProduct = function(productId, amount, userId) {
              },
              json: jsonRequest
         };
-       request(optionsRequest, function(err, resp, body) {
-         if (resp && (resp.statusCode === 200 || resp.statusCode === 201)) {
-           console.log(resp.statusCode + resp.body.status + resp.body.transaction_status_code);
-           return "Success"
-         } else {
-           console.log(resp.statusCode + body.status + body.transaction_status_code);
-           return "Error"
-         }
-       });
+        request(optionsRequest)
+        .then (function(resp){
+          console.log(resp );
+          return "Success"
 
+        })
+        .catch(function(err){
+          console.log(err);
+          return "Error"
+        })
       }
     });
 }
