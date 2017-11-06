@@ -8,8 +8,9 @@ const mongoose = require('mongoose');
 
 // DB
 
-mongoose.connect('mongodb://localhost:auth/auth');
-
+//mongoose.connect('mongodb://localhost:auth/auth');
+const HOST = process.env.MONGO_HOST || '127.0.0.1'
+mongoose.connect(`mongodb://${HOST}/auth`);
 
 // APP
 
