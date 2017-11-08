@@ -14,4 +14,5 @@ module.exports = function(app) {
   app.post('/api/signin', requireSignIn, Authentication.signin);
   app.post('/api/signup', Authentication.signup);
   app.post('/api/cart',requireAuth, CartController.processCart);
+  app.get('/api/cart/history',requireAuth, Transactions.transactionsHistory);
 }

@@ -4,7 +4,8 @@ const request = require('request-promise');
 
 const MAX_PURCHASES_PER_DAY = 3;
 
-exports.canBuyProduct = function(productId, amount, userId) {
+exports.canBuyProduct =function(productId, amount, userId) {
+   new Promise(function(resolve, reject){
   const yesterday = new Date(Date.now() - 864e5);
   //const userId = req.body.user_id;
   var created = false;
@@ -16,7 +17,7 @@ exports.canBuyProduct = function(productId, amount, userId) {
      }
    ).exec((err, docs) => {
      if (err) {
-       return 1000;
+       reject(false);
      }
      var count = docs.reduce(
        (sum, transaction) => sum + transaction.amount,
@@ -28,6 +29,7 @@ exports.canBuyProduct = function(productId, amount, userId) {
      if (count > MAX_PURCHASES_PER_DAY) {
        console.log("NOT CREATED");
        created = false;
+       reject(false);
 
      } else {
        const newTransaction = new Transaction({
@@ -38,10 +40,17 @@ exports.canBuyProduct = function(productId, amount, userId) {
        newTransaction.save(function(err) {
          created = true;
          console.log("CREATED");
-         return true;
+         resolve(true);
          }
        )}});
 
      console.log(`created ${created}` );
-     return created;
-   };
+   })};
+
+exports.transactionsHistory= function(req, res, next) {
+    Transaction.find({
+        userId: req.user.id
+    }).then(transactions => {
+      res.send(transactions);
+    });
+}

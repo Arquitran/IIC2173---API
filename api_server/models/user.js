@@ -2,7 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt-nodejs');
 var autoIncrement = require('mongoose-auto-increment');
-var connection = mongoose.createConnection("mongodb://localhost/myDatabase");
+//var connection = mongoose.createConnection("mongodb://localhost/myDatabase");
+const HOST = process.env.MONGO_HOST || '127.0.0.1'
+var connection = mongoose.createConnection(`mongodb://${HOST}/myDatabase`);
 
 autoIncrement.initialize(connection);
 
