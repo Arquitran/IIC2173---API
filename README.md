@@ -51,7 +51,7 @@ BODY
 401 => Unauthorized
 ```
 
-**POST:  /api/cart/history**
+**GET:  /api/cart/history**
 ```
 HEADERS
 Authorization: token
