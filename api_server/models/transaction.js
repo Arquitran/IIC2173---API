@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt-nodejs');
 
 const transactionSchema = new Schema({
   product: Number,
-  amount: String,
+  amount: Number,
   userId: Number,
 },
 {

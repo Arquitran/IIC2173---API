@@ -1,6 +1,6 @@
 const Transaction = require('../models/transaction');
 const config = require('../config');
-var request=require('request-promise');
+const request = require('request-promise');
 
 const MAX_PURCHASES_PER_DAY = 3;
 const APPLICATION_TOKEN = "6d876925-a71d-4379-93aa-6144138dc8fc";
@@ -45,7 +45,17 @@ exports.buyProduct = function(productId, amount, userId) {
       request(optionsRequest)
         .then (function(resp) {
           console.log(resp);
-          return "Success"
+          const newTransaction = new Transaction({
+            product: Number(productId),
+            amount: Number(amount),
+            userId: Number(userId),
+          });
+          newTransaction.save(function(err) {
+            if (err) {
+              return next(err);
+            }
+            return "Success"
+          });
         })
         .catch(function(err) {
           console.log(err);
