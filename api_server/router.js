@@ -2,6 +2,7 @@ const Authentication = require('./controllers/authentication');
 const Transactions = require('./controllers/transactions');
 const CartController = require('./controllers/cart');
 const passportService = require('./services/passport');
+const test = require('./controllers/test');
 const passport = require('passport');
 
 const requireAuth = passport.authenticate('jwt', { session: false });
@@ -13,7 +14,5 @@ module.exports = function(app) {
   });
   app.post('/api/signin', requireSignIn, Authentication.signin);
   app.post('/api/signup', Authentication.signup);
-  app.post('/api/transactions', requireAuth, Transactions.buyProduct);
-
-  app.post('/api/cart', requireAuth, CartController.processCart);
+  app.post('/api/cart',requireAuth, CartController.processCart);
 }
