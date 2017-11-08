@@ -19,7 +19,8 @@
 	"password": "pswrd123"
 }
 
-200 =>  { "token": "eyq0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1OWZlM2ZiYTVmNWEyNTY1NGRmMWQ0NTMiLCJpYXQiOjE1MDk4MzQ2ODIzODR9.Hqn2U4KpdQfW9mLHiWja4Ra5RZeYa0KfWU86cQyOCh2" }
+200 =>  
+{ "token": "eyq0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1OWZlM2ZiYTVmNWEyNTY1NGRmMWQ0NTMiLCJpYXQiOjE1MDk4MzQ2ODIzODR9.Hqn2U4KpdQfW9mLHiWja4Ra5RZeYa0KfWU86cQyOCh2" }
 
 401 => Unauthorized
 ```
@@ -30,9 +31,8 @@ HEADERS
 Authorization: token
 
 BODY
-
 [
-	{
+    {
 		"product_id": "1",
 		"amount": "1"
 	},
@@ -43,12 +43,40 @@ BODY
 ]
 
 200 =>  {
-					"1":1,
-					"2":1,
-					(product_id: 1 bought, 0 rejected or error)
-				}
+			"1":1,
+			"2":1,
+			(product_id: 1 bought, 0 rejected or error)
+		}
 
+401 => Unauthorized
+```
 
+**POST:  /api/cart/history**
+```
+HEADERS
+Authorization: token
+
+200 =>  
+[
+    {
+        "_id": "5a02818ccff796300524476a",
+        "updatedAt": "2017-11-08T04:01:16.403Z",
+        "createdAt": "2017-11-08T04:01:16.403Z",
+        "product": 1,
+        "amount": 1,
+        "userId": 0,
+        "__v": 0
+    },
+    {
+        "_id": "5a02818ecff796300524476b",
+        "updatedAt": "2017-11-08T04:01:18.533Z",
+        "createdAt": "2017-11-08T04:01:18.533Z",
+        "product": 1,
+        "amount": 1,
+        "userId": 0,
+        "__v": 0
+    }
+]
 
 401 => Unauthorized
 ```
