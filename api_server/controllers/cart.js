@@ -2,7 +2,9 @@ const config = require('../config');
 const Transactions = require('./transactions');
 const APPLICATION_TOKEN = "6d876925-a71d-4379-93aa-6144138dc8fc";
 const GROUP = "G2";
-const TRANSACTIONS_URL = 'http://arqss16.ing.puc.cl/transactions/';
+const TRANSACTIONS_URL = 'http://arqss5.ing.puc.cl/transactions/';
+const Transaction = require('../models/transaction');
+
 
 var request=require('request-promise');
 
@@ -12,7 +14,7 @@ exports.processCart = function(req, res, next) {
   var id = 0;
   var total = req.body.length;
   var count = -1;
-  for(i = 0; i < req.body.length; i++) {
+  for(let i = 0; i < req.body.length; i++) {
     console.log("se" + req.body[i].product_id);
     //responses[req.body[i].product_id] = Transactions.buyProduct(req.body[i].product_id,req.body[i].amount, req.user._id);
     var jsonRequest = {
@@ -33,8 +35,18 @@ exports.processCart = function(req, res, next) {
     requests.push(request(optionsRequest)
     .then (function(resp){
       count++;
-      return({key: count, value: resp});
       console.log(resp + count + total );
+      const newTransaction = new Transaction({
+            product: Number(req.body[i].product_id),
+            amount: Number(req.body[i].amount),
+            userId: Number(req.user._id),
+          });
+          newTransaction.save(function(err) {
+            created = true;
+            console.log("CREATED");
+          })
+      return({key: count, value: resp});
+
     })
     .catch(function(err){
       console.log(err);
