@@ -8,65 +8,41 @@ const Transaction = require('../models/transaction');
 
 var request=require('request-promise');
 
-exports.processCart = function(req, res, next) {
-  var responses = [];
-  var requests = [];
-  var id = 0;
-  var total = req.body.length;
-  var count = -1;
-  for(let i = 0; i < req.body.length; i++) {
-    console.log("se" + req.body[i].product_id);
-    //responses[req.body[i].product_id] = Transactions.buyProduct(req.body[i].product_id,req.body[i].amount, req.user._id);
-    var jsonRequest = {
-      "application_token": APPLICATION_TOKEN,
-      "product": req.body[i].product_id,
-      "id": GROUP,
-      "amount": req.body[i].amount,
-      "user_id": req.user._id
-    };
-    var optionsRequest = {
-         url: TRANSACTIONS_URL,
-         method: 'POST',
-         headers: {
-           'Content-Type': 'application/json'
-         },
-         json: jsonRequest
-    };
-    requests.push(request(optionsRequest)
-    .then (function(resp){
-      count++;
-      console.log(resp + count + total );
-      const newTransaction = new Transaction({
-            product: Number(req.body[i].product_id),
-            amount: Number(req.body[i].amount),
-            userId: Number(req.user._id),
-          });
-          newTransaction.save(function(err) {
-            created = true;
-            console.log("CREATED");
-          })
-      return({key: count, value: resp});
+exports.processCart = async function(req, res, next) {
+  // Process body.
+  const transactionsArrayPromises = req.body.map(bodyTransaction => {
+    return Transaction.processTransaction(bodyTransaction, req.user._id);
+  });
 
-    })
-    .catch(function(err){
-      console.log(err);
-      return({key:count, value: err});
-    }));
+  Promise.all(transactionsArrayPromises).then(transactionsArray => {
+    
+    const transactions = [];
+    const dbPromises = [];
+    // Send API requests.
+    console.log("transactionsArray", transactionsArray);
+    Transaction.sendAPIRequests(transactionsArray, req.user._id).then(responses => {
+      responses.forEach(response => {
+        console.log("sendAPIRequests", response);
+        if(response.httpResponse.status.transaction_status_code === "EXEC") {
+          dbPromises.push(Transaction.createTransaction(response.params, req.user._id).then(dbResponse => {
+            return [dbResponse, response.params];
+          }));
+        }
+      });
 
-  }
+      Promise.all(dbPromises).then(dbValues => {
+        const responseArray = []
+        dbValues.map(dbValue => dbValue[1]).forEach(function(element) {
+          var json = {};
+          json[element[0]] = element[1];
+          responseArray.push(json);
+        });
+        return res.json(responseArray);
+      });
+    }).catch(error => {
+      console.log(error);
+      return res.sendStatus(500);
+    });
 
-
-
-  Promise.all(requests).then((values) =>{
-    var results = {};
-    for (i = 0; i < values.length; i++) {
-      if (values[i]["value"]["status"]["transaction_status_code"]=="EXEC"){
-        results[req.body[values[i]["key"]].product_id] = 1;
-      } else {
-        results[req.body[values[i]["key"]].product_id] = 0;
-      }
-    }
-    res.send(results);
   })
-
 };
