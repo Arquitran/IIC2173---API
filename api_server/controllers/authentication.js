@@ -45,3 +45,7 @@ exports.signup = function(req, res, next) {
   });
 
 }
+
+exports.print = function(req, res, next) {
+  console.log("HOLA");
+}

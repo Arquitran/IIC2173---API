@@ -44,6 +44,13 @@ userSchema.methods.comparePassword = function(candidatePassword, callback) {
   });
 }
 
+userSchema.statics.getUser = function(userEmail){
+  return this.findOne(
+     { email: userEmail }
+   );
+}
+
+
 const ModelClass = mongoose.model('user', userSchema);
 
 module.exports = ModelClass;
