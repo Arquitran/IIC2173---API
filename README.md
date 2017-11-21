@@ -80,3 +80,67 @@ Authorization: token
 
 401 => Unauthorized
 ```
+--
+### External Applications
+
+**POST:  /api/external/cart/**
+```
+HEADERS
+Content-Type:application/json
+Authorization: SECRET
+Email: USEREMAIL
+
+BODY
+
+[
+    {
+		"product_id": "1",
+		"amount": "1"
+	},
+		{
+		"product_id": "2",
+		"amount": "10"
+	}
+]
+
+
+200 =>  {
+			"1":1,
+			"2":1,
+			(product_id: 1 bought, 0 rejected or error)
+		}
+
+401 => Unauthorized
+```
+
+**GET:  /api/external/cart/history**
+```
+HEADERS
+Content-Type:application/json
+Authorization: SECRET
+Email: USEREMAIL
+
+200 =>  
+[
+    {
+        "_id": "5a02818ccff796300524476a",
+        "updatedAt": "2017-11-08T04:01:16.403Z",
+        "createdAt": "2017-11-08T04:01:16.403Z",
+        "product": 1,
+        "amount": 1,
+        "userId": 0,
+        "__v": 0
+    },
+    {
+        "_id": "5a02818ecff796300524476b",
+        "updatedAt": "2017-11-08T04:01:18.533Z",
+        "createdAt": "2017-11-08T04:01:18.533Z",
+        "product": 1,
+        "amount": 1,
+        "userId": 0,
+        "__v": 0
+    }
+]
+
+401 => Unauthorized
+```
