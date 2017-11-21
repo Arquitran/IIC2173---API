@@ -2,11 +2,16 @@ const config = require('../config');
 const Transactions = require('./transactions');
 const APPLICATION_TOKEN = "6d876925-a71d-4379-93aa-6144138dc8fc";
 const GROUP = "G2";
-const TRANSACTIONS_URL = 'https://arqss5.ing.puc.cl/transactions/';
+const TRANSACTIONS_URL = 'https://arqss16.ing.puc.cl/transactions/';
 const Transaction = require('../models/transaction');
 
 
 var request=require('request-promise');
+
+exports.processUser = async function(req, res, next) {
+  console.log("userCart")
+
+}
 
 exports.processCart = async function(req, res, next) {
   // Process body.
@@ -15,7 +20,7 @@ exports.processCart = async function(req, res, next) {
   });
 
   Promise.all(transactionsArrayPromises).then(transactionsArray => {
-    
+
     const transactions = [];
     const dbPromises = [];
     // Send API requests.
