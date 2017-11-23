@@ -6,7 +6,7 @@ const request = require('request-promise');
 const MAX_AMOUNT_PER_DAY = 3;
 const GROUP = "G2";
 const APPLICATION_TOKEN = "6d876925-a71d-4379-93aa-6144138dc8fc";
-const TRANSACTIONS_URL = 'https://arqss16.ing.puc.cl/transactions/';
+const TRANSACTIONS_URL = 'https://arqss5.ing.puc.cl/transactions/';
 
 const transactionSchema = new Schema({
   product: Number,
